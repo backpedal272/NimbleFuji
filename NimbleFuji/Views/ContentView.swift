@@ -10,10 +10,15 @@ struct ContentView: View {
             RecipeSidebar()
                 .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 360)
         } detail: {
-            RawFilesView()
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    RenderBar()
-                }
+            switch model.workspace {
+            case .render:
+                RawFilesView()
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        RenderBar()
+                    }
+            case .slots:
+                CameraSlotsView()
+            }
         }
         .inspector(isPresented: $showEditor) {
             RecipeInspector()
@@ -22,6 +27,16 @@ struct ContentView: View {
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 CameraStatusView()
+            }
+            ToolbarItem(placement: .principal) {
+                Picker("Workspace", selection: $model.workspace) {
+                    ForEach(AppModel.Workspace.allCases) { space in
+                        Label(space.rawValue, systemImage: space.systemImage).tag(space)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelStyle(.titleAndIcon)
+                .help("Switch between rendering RAWs and managing the camera's C slots")
             }
             ToolbarItem(placement: .primaryAction) {
                 Button {

@@ -11,8 +11,14 @@ struct RecipeSidebar: View {
         List(selection: $model.editingRecipeID) {
             Section {
                 ForEach(model.recipes.recipes) { recipe in
-                    RecipeRow(recipe: recipe, isIncluded: binding(for: recipe))
+                    RecipeRow(recipe: recipe, isIncluded: binding(for: recipe),
+                              showsCheckbox: model.workspace == .render)
                         .tag(recipe.id)
+                        .draggable(recipe.id.uuidString) {
+                            Label(recipe.name, systemImage: "camera.filters")
+                                .padding(6)
+                                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 6))
+                        }
                         .contextMenu { menu(for: recipe) }
                 }
             } header: {
@@ -124,13 +130,16 @@ struct RecipeSidebar: View {
 private struct RecipeRow: View {
     let recipe: Recipe
     @Binding var isIncluded: Bool
+    var showsCheckbox = true
 
     var body: some View {
         HStack(spacing: 8) {
-            Toggle("Include in batch", isOn: $isIncluded)
-                .toggleStyle(.checkbox)
-                .labelsHidden()
-                .help("Include this recipe in the next render")
+            if showsCheckbox {
+                Toggle("Include in batch", isOn: $isIncluded)
+                    .toggleStyle(.checkbox)
+                    .labelsHidden()
+                    .help("Include this recipe in the next render")
+            }
             VStack(alignment: .leading, spacing: 2) {
                 Text(recipe.name)
                     .lineLimit(1)

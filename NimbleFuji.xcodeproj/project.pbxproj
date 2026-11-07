@@ -21,16 +21,20 @@
 		50FF1209E7DCDE5474B8982C /* FujiCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1256C354233E69EC5A75B892 /* FujiCLI.swift */; };
 		5EB08CAD519A0E524BA69255 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90E14F99170C08DDC385D6 /* ContentView.swift */; };
 		6208181974749EF8F33DCE86 /* NimbleFujiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D4A0BF86F2C458FFDFC444 /* NimbleFujiApp.swift */; };
+		679533CF53D6C33BD3210EF8 /* CameraSlots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496B0EA9538A46191ACD8A53 /* CameraSlots.swift */; };
 		697E459EA660099F43AC6A4A /* RecipeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4848788FFB77BBFFF33D353 /* RecipeTests.swift */; };
 		6E78742A97FBB1C39DD62EDB /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB80FCD2DD787B2172C4F1E9 /* AppModel.swift */; };
 		8B0431D45EF83D554CF780ED /* RawFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E610EE84573AAEB997490D76 /* RawFilesView.swift */; };
 		8D744454A266A3F27DBE30C3 /* CameraStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9836CB5A3A39EEABACE87C42 /* CameraStatusView.swift */; };
 		A847A150E3E8B4455FE1DC9E /* RawFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEE07567EB8E0DD38609133 /* RawFile.swift */; };
+		BF2F3CAB43D687F26A4E2946 /* SlotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C04702A6C8A58440CBF832 /* SlotTests.swift */; };
+		CBCC8DD6EFBCC9F877DFE04B /* CameraSlotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CDBF4B57CAC166A73E2994 /* CameraSlotsView.swift */; };
 		E3140E34BC269C219856505C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DC7BE4983A54293B1B733B /* SettingsView.swift */; };
 		E62B855723BBF81C95B0CA99 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = A14CEA4687C44382A5B7AD45 /* Yams */; };
 		E673F2EA644273830397EF9E /* CameraMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A544C95AD6DDFCE4B93C018F /* CameraMonitor.swift */; };
 		EC08F6C07E4935402E7A2926 /* RecipeOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BE97FFA653780E9A3FC916 /* RecipeOptions.swift */; };
 		EECF3F61AB4AE34C2EB46BA5 /* RenderProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BABED3753AC593170401BC0 /* RenderProgressView.swift */; };
+		F1390393DD0CE8497954EDEF /* Recipe+Slot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8D84577E2099C6282CB3F /* Recipe+Slot.swift */; };
 		F4FFFA8669F9DA68B4EEC71A /* SampleRecipes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C4DA2E8E0FD0E18E944F40 /* SampleRecipes.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +55,8 @@
 		1E9A581B4840DAA67B58A426 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		1FEE07567EB8E0DD38609133 /* RawFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawFile.swift; sourceTree = "<group>"; };
 		2C64F67AFB2FAAEAAD456D9D /* RecipeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeStore.swift; sourceTree = "<group>"; };
+		496B0EA9538A46191ACD8A53 /* CameraSlots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSlots.swift; sourceTree = "<group>"; };
+		4BE8D84577E2099C6282CB3F /* Recipe+Slot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+Slot.swift"; sourceTree = "<group>"; };
 		58C4DA2E8E0FD0E18E944F40 /* SampleRecipes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRecipes.swift; sourceTree = "<group>"; };
 		60DC7BE4983A54293B1B733B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		6A78365E1BACEEFD77C1F40B /* BatchRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenderer.swift; sourceTree = "<group>"; };
@@ -66,6 +72,8 @@
 		99BE97FFA653780E9A3FC916 /* RecipeOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeOptions.swift; sourceTree = "<group>"; };
 		A4848788FFB77BBFFF33D353 /* RecipeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTests.swift; sourceTree = "<group>"; };
 		A544C95AD6DDFCE4B93C018F /* CameraMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraMonitor.swift; sourceTree = "<group>"; };
+		B1C04702A6C8A58440CBF832 /* SlotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlotTests.swift; sourceTree = "<group>"; };
+		B5CDBF4B57CAC166A73E2994 /* CameraSlotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSlotsView.swift; sourceTree = "<group>"; };
 		B9318A5C610E6C251CA20957 /* RecipeInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeInspector.swift; sourceTree = "<group>"; };
 		BB80FCD2DD787B2172C4F1E9 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		D35E0EE9FFF87B8A793E2944 /* RecipeSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeSidebar.swift; sourceTree = "<group>"; };
@@ -127,6 +135,7 @@
 			children = (
 				1FEE07567EB8E0DD38609133 /* RawFile.swift */,
 				1E9A581B4840DAA67B58A426 /* Recipe.swift */,
+				4BE8D84577E2099C6282CB3F /* Recipe+Slot.swift */,
 				1AE79E26FE89121A23508976 /* RecipeCoding.swift */,
 				99BE97FFA653780E9A3FC916 /* RecipeOptions.swift */,
 			);
@@ -138,6 +147,7 @@
 			children = (
 				81B3334B9F3F5291987B1539 /* CameraRenderTests.swift */,
 				A4848788FFB77BBFFF33D353 /* RecipeTests.swift */,
+				B1C04702A6C8A58440CBF832 /* SlotTests.swift */,
 			);
 			path = NimbleFujiTests;
 			sourceTree = "<group>";
@@ -155,6 +165,7 @@
 			children = (
 				6A78365E1BACEEFD77C1F40B /* BatchRenderer.swift */,
 				A544C95AD6DDFCE4B93C018F /* CameraMonitor.swift */,
+				496B0EA9538A46191ACD8A53 /* CameraSlots.swift */,
 				1256C354233E69EC5A75B892 /* FujiCLI.swift */,
 				74FFCBF2F3C564AE7D62423A /* RawLibrary.swift */,
 				2C64F67AFB2FAAEAAD456D9D /* RecipeStore.swift */,
@@ -175,6 +186,7 @@
 		D95FC03DF7230BC29A3406B8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B5CDBF4B57CAC166A73E2994 /* CameraSlotsView.swift */,
 				9836CB5A3A39EEABACE87C42 /* CameraStatusView.swift */,
 				1B90E14F99170C08DDC385D6 /* ContentView.swift */,
 				E610EE84573AAEB997490D76 /* RawFilesView.swift */,
@@ -286,6 +298,8 @@
 				6E78742A97FBB1C39DD62EDB /* AppModel.swift in Sources */,
 				1B391FA8D6E86561A7233572 /* BatchRenderer.swift in Sources */,
 				E673F2EA644273830397EF9E /* CameraMonitor.swift in Sources */,
+				679533CF53D6C33BD3210EF8 /* CameraSlots.swift in Sources */,
+				CBCC8DD6EFBCC9F877DFE04B /* CameraSlotsView.swift in Sources */,
 				8D744454A266A3F27DBE30C3 /* CameraStatusView.swift in Sources */,
 				5EB08CAD519A0E524BA69255 /* ContentView.swift in Sources */,
 				50FF1209E7DCDE5474B8982C /* FujiCLI.swift in Sources */,
@@ -293,6 +307,7 @@
 				A847A150E3E8B4455FE1DC9E /* RawFile.swift in Sources */,
 				8B0431D45EF83D554CF780ED /* RawFilesView.swift in Sources */,
 				313B1212A4F831992E6C7276 /* RawLibrary.swift in Sources */,
+				F1390393DD0CE8497954EDEF /* Recipe+Slot.swift in Sources */,
 				1CD26D907F30111B849C36FF /* Recipe.swift in Sources */,
 				3C2DF8CA20E7EBED67DA11AD /* RecipeCoding.swift in Sources */,
 				446A731649E19D181D86CB8D /* RecipeInspector.swift in Sources */,
@@ -312,6 +327,7 @@
 			files = (
 				003192C237EAB8E27908901C /* CameraRenderTests.swift in Sources */,
 				697E459EA660099F43AC6A4A /* RecipeTests.swift in Sources */,
+				BF2F3CAB43D687F26A4E2946 /* SlotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

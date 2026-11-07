@@ -32,3 +32,21 @@ struct CameraRenderTests {
         }
     }
 }
+
+/// Reads (never writes) all C slots from a real camera. Runs only when NIMBLE_FUJI_TEST_SLOTS=1.
+@MainActor
+struct CameraSlotReadTests {
+    nonisolated static let enabled = ProcessInfo.processInfo.environment["NIMBLE_FUJI_TEST_SLOTS"] == "1"
+
+    @Test(.enabled(if: enabled), .timeLimit(.minutes(2)))
+    func readsAllSlots() async throws {
+        let cli = try #require(FujiCLI.locate(preferredPath: nil))
+        let slots = CameraSlots()
+        await slots.load(using: cli)
+        #expect(slots.lastError == nil, "\(slots.lastError ?? "")")
+        for slot in slots.slots {
+            let recipe = try #require(slot.recipe, "\(slot.title): \(slot.error ?? "no data")")
+            print("✓ \(slot.title) \(recipe.name.isEmpty ? "(unnamed)" : recipe.name) — \(recipe.summary) valid=\(recipe.isValid) roundtrip=\(recipe.forSlot().hasSameContent(as: recipe))")
+        }
+    }
+}

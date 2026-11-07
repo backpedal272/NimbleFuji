@@ -119,6 +119,49 @@ nonisolated struct FujiCLI: Sendable {
         }
     }
 
+    // MARK: Slots
+
+    /// Reads one C slot as fujicli's simulation JSON.
+    func readSlot(_ slot: Int) async throws -> Data {
+        let result = try await run(["--json", "simulation", "get", "c\(slot)"])
+        guard result.status == 0 else {
+            throw FujiCLIError.failed(command: "simulation get", message: Self.explain(result))
+        }
+        return Data(result.stdout.utf8)
+    }
+
+    /// Writes `recipe` into a C slot. Every recipe setting is sent (see `Recipe.forSlot()`),
+    /// so nothing from the slot's previous recipe is left behind.
+    func writeSlot(_ slot: Int, recipe: Recipe) async throws {
+        let args = Self.slotArguments(slot: slot, recipe: recipe)
+        let result = try await run(args)
+        guard result.status == 0 else {
+            throw FujiCLIError.failed(command: "simulation set", message: Self.explain(result))
+        }
+    }
+
+    static func slotArguments(slot: Int, recipe: Recipe) -> [String] {
+        let filled = recipe.forSlot()
+        var flags = filled.fujicliFlags().filter { !$0.hasPrefix("--exposure-offset=") }
+        flags.insert("--custom-setting-name=\(Recipe.slotName(for: recipe.name))", at: 0)
+        return ["simulation", "set", "c\(slot)"] + flags
+    }
+
+    /// Full camera settings backup (all slots and menus).
+    func exportBackup(to url: URL) async throws {
+        let result = try await run(["backup", "export", url.path(percentEncoded: false)])
+        guard result.status == 0 else {
+            throw FujiCLIError.failed(command: "backup export", message: Self.explain(result))
+        }
+    }
+
+    func importBackup(from url: URL) async throws {
+        let result = try await run(["backup", "import", url.path(percentEncoded: false)])
+        guard result.status == 0 else {
+            throw FujiCLIError.failed(command: "backup import", message: Self.explain(result))
+        }
+    }
+
     static func renderArguments(input: URL, output: URL, recipe: Recipe, draft: Bool) -> [String] {
         var args = ["image", "render", "--file-type=jpeg"]
         if draft { args.append("--draft") }

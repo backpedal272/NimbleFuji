@@ -16,6 +16,24 @@ final class AppModel {
     let library = RawLibrary()
     let renderer = BatchRenderer()
     let camera = CameraMonitor()
+    let slots = CameraSlots()
+
+    enum Workspace: String, CaseIterable, Identifiable {
+        case render = "Render"
+        case slots = "Camera Slots"
+        var id: String { rawValue }
+        var systemImage: String { self == .render ? "photo.stack" : "square.grid.3x3" }
+    }
+
+    var workspace: Workspace = .render
+    /// A pending slot write waiting for the user's confirmation.
+    var pendingSlotWrite: SlotWrite?
+
+    struct SlotWrite: Identifiable {
+        let id = UUID()
+        let recipe: Recipe
+        let slot: Int
+    }
 
     /// Recipes ticked for the next batch.
     var batchRecipeIDs: Set<Recipe.ID> = [] {
@@ -75,7 +93,7 @@ final class AppModel {
     var renderCount: Int { batchRecipes.count * batchRaws.count }
 
     var canRender: Bool {
-        renderCount > 0 && !renderer.isRunning && batchRecipes.allSatisfy(\.isValid)
+        renderCount > 0 && !renderer.isRunning && !slots.isBusy && batchRecipes.allSatisfy(\.isValid)
     }
 
     func refreshCamera() {
@@ -103,6 +121,77 @@ final class AppModel {
             draft: defaults.bool(forKey: SettingsKey.draftRenders),
             overwrite: defaults.bool(forKey: SettingsKey.overwriteExisting))
         showRenderSheet = true
+    }
+
+    // MARK: Camera slots
+
+    var canUseSlots: Bool { !renderer.isRunning && !slots.isBusy }
+
+    func loadSlots() {
+        guard let cli else {
+            alert = AlertInfo(title: "fujicli not found", message: "Set its location in Settings (⌘,).")
+            return
+        }
+        Task { await slots.load(using: cli) }
+    }
+
+    /// Asks for confirmation before writing; see `SlotWriteSheet`.
+    func requestSlotWrite(recipeID: Recipe.ID, slot: Int) {
+        guard let recipe = recipes.recipe(withID: recipeID) else { return }
+        guard recipe.isValid else {
+            alert = AlertInfo(title: "“\(recipe.name)” has problems",
+                              message: recipe.validationIssues().joined(separator: "\n"))
+            return
+        }
+        pendingSlotWrite = SlotWrite(recipe: recipe, slot: slot)
+    }
+
+    func performSlotWrite(_ write: SlotWrite) {
+        guard let cli else { return }
+        pendingSlotWrite = nil
+        Task {
+            do {
+                try await slots.write(write.recipe, to: write.slot, using: cli)
+            } catch {
+                alert = AlertInfo(title: "Couldn't write C\(write.slot)", message: error.localizedDescription)
+            }
+        }
+    }
+
+    func backUpCamera() {
+        guard let cli else { return }
+        Task {
+            do {
+                let url = try await slots.backUpNow(using: cli)
+                reveal([url])
+            } catch {
+                alert = AlertInfo(title: "Backup failed", message: error.localizedDescription)
+            }
+        }
+    }
+
+    func restoreCamera(from url: URL) {
+        guard let cli else { return }
+        Task {
+            do {
+                try await slots.restore(from: url, using: cli)
+            } catch {
+                alert = AlertInfo(title: "Restore failed", message: error.localizedDescription)
+            }
+        }
+    }
+
+    /// Saves a slot's settings as a new YAML recipe.
+    func saveSlotAsRecipe(_ slot: CameraSlots.Slot) {
+        guard var recipe = slot.recipe else { return }
+        recipe.id = UUID()
+        let base = recipe.name.trimmingCharacters(in: .whitespaces)
+        recipe.name = recipes.uniqueName(base.isEmpty ? "C\(slot.number) Recipe" : base)
+        recipe.source = "X-T5 custom slot C\(slot.number)"
+        perform {
+            let saved = try recipes.save(recipe)
+            editingRecipeID = saved.id
+        }
     }
 
     // MARK: Recipe actions
