@@ -12,6 +12,7 @@
 		1B391FA8D6E86561A7233572 /* BatchRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78365E1BACEEFD77C1F40B /* BatchRenderer.swift */; };
 		1CD26D907F30111B849C36FF /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9A581B4840DAA67B58A426 /* Recipe.swift */; };
 		1DB966A38D6BDC7FF0D8886D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 87CF438AAE37D9F67F6A927D /* Assets.xcassets */; };
+		268BB64DEFCAA4679669EE9F /* FujiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6AC8AA9437C79823E5B0FFB5 /* FujiKit */; };
 		2B788E09D2F02B8BE1CAB6CA /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C64F67AFB2FAAEAAD456D9D /* RecipeStore.swift */; };
 		313B1212A4F831992E6C7276 /* RawLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74FFCBF2F3C564AE7D62423A /* RawLibrary.swift */; };
 		39C040589EB6F386186C4598 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C7FC63E0DF75B120B14FCE67 /* Yams */; };
@@ -26,12 +27,14 @@
 		6E78742A97FBB1C39DD62EDB /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB80FCD2DD787B2172C4F1E9 /* AppModel.swift */; };
 		8B0431D45EF83D554CF780ED /* RawFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E610EE84573AAEB997490D76 /* RawFilesView.swift */; };
 		8D744454A266A3F27DBE30C3 /* CameraStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9836CB5A3A39EEABACE87C42 /* CameraStatusView.swift */; };
+		992BA841F9FF50757011519C /* CameraEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B54852BDD55A50DE1B88DC /* CameraEngine.swift */; };
 		A847A150E3E8B4455FE1DC9E /* RawFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEE07567EB8E0DD38609133 /* RawFile.swift */; };
 		BC8B978414F718D705A828EB /* SlotViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE13201A47B834B610E9B24 /* SlotViews.swift */; };
 		BF2F3CAB43D687F26A4E2946 /* SlotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C04702A6C8A58440CBF832 /* SlotTests.swift */; };
 		E3140E34BC269C219856505C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DC7BE4983A54293B1B733B /* SettingsView.swift */; };
 		E62B855723BBF81C95B0CA99 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = A14CEA4687C44382A5B7AD45 /* Yams */; };
 		E673F2EA644273830397EF9E /* CameraMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A544C95AD6DDFCE4B93C018F /* CameraMonitor.swift */; };
+		EB105BF99A809027BBA8AD43 /* FujiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A182C66D1D3741925323A3E /* FujiKit */; };
 		EC08F6C07E4935402E7A2926 /* RecipeOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BE97FFA653780E9A3FC916 /* RecipeOptions.swift */; };
 		EECF3F61AB4AE34C2EB46BA5 /* RenderProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BABED3753AC593170401BC0 /* RenderProgressView.swift */; };
 		F1390393DD0CE8497954EDEF /* Recipe+Slot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE8D84577E2099C6282CB3F /* Recipe+Slot.swift */; };
@@ -60,6 +63,7 @@
 		4CE13201A47B834B610E9B24 /* SlotViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlotViews.swift; sourceTree = "<group>"; };
 		58C4DA2E8E0FD0E18E944F40 /* SampleRecipes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRecipes.swift; sourceTree = "<group>"; };
 		60DC7BE4983A54293B1B733B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		672C3B1593DEE88D17DC3F3A /* FujiKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FujiKit; path = FujiKit; sourceTree = SOURCE_ROOT; };
 		6A78365E1BACEEFD77C1F40B /* BatchRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenderer.swift; sourceTree = "<group>"; };
 		6B27525A62E63D75AEA272CE /* NimbleFuji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NimbleFuji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BABED3753AC593170401BC0 /* RenderProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderProgressView.swift; sourceTree = "<group>"; };
@@ -78,6 +82,7 @@
 		BB80FCD2DD787B2172C4F1E9 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		D35E0EE9FFF87B8A793E2944 /* RecipeSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeSidebar.swift; sourceTree = "<group>"; };
 		E610EE84573AAEB997490D76 /* RawFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawFilesView.swift; sourceTree = "<group>"; };
+		F1B54852BDD55A50DE1B88DC /* CameraEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +91,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39C040589EB6F386186C4598 /* Yams in Frameworks */,
+				268BB64DEFCAA4679669EE9F /* FujiKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +100,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E62B855723BBF81C95B0CA99 /* Yams in Frameworks */,
+				EB105BF99A809027BBA8AD43 /* FujiKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +112,7 @@
 			children = (
 				7593CE8B8013E590CBC45183 /* NimbleFuji */,
 				8AB9B48364A2D0AA0D95F0A2 /* NimbleFujiTests */,
+				47D6103444D519641063FFEA /* Packages */,
 				263625CE77430C00D5227134 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,6 +124,14 @@
 				97B4BFE7B7D2FA317744DEC5 /* NimbleFujiTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		47D6103444D519641063FFEA /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				672C3B1593DEE88D17DC3F3A /* FujiKit */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 		7593CE8B8013E590CBC45183 /* NimbleFuji */ = {
@@ -164,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				6A78365E1BACEEFD77C1F40B /* BatchRenderer.swift */,
+				F1B54852BDD55A50DE1B88DC /* CameraEngine.swift */,
 				A544C95AD6DDFCE4B93C018F /* CameraMonitor.swift */,
 				496B0EA9538A46191ACD8A53 /* CameraSlots.swift */,
 				1256C354233E69EC5A75B892 /* FujiCLI.swift */,
@@ -217,6 +234,7 @@
 			name = NimbleFuji;
 			packageProductDependencies = (
 				A14CEA4687C44382A5B7AD45 /* Yams */,
+				3A182C66D1D3741925323A3E /* FujiKit */,
 			);
 			productName = NimbleFuji;
 			productReference = 6B27525A62E63D75AEA272CE /* NimbleFuji.app */;
@@ -237,6 +255,7 @@
 			name = NimbleFujiTests;
 			packageProductDependencies = (
 				C7FC63E0DF75B120B14FCE67 /* Yams */,
+				6AC8AA9437C79823E5B0FFB5 /* FujiKit */,
 			);
 			productName = NimbleFujiTests;
 			productReference = 97B4BFE7B7D2FA317744DEC5 /* NimbleFujiTests.xctest */;
@@ -267,6 +286,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				B48A0E940C65383265145B09 /* XCRemoteSwiftPackageReference "Yams" */,
+				9AA576FB7A65CFDB0447B8C6 /* XCLocalSwiftPackageReference "FujiKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 263625CE77430C00D5227134 /* Products */;
@@ -297,6 +317,7 @@
 			files = (
 				6E78742A97FBB1C39DD62EDB /* AppModel.swift in Sources */,
 				1B391FA8D6E86561A7233572 /* BatchRenderer.swift in Sources */,
+				992BA841F9FF50757011519C /* CameraEngine.swift in Sources */,
 				E673F2EA644273830397EF9E /* CameraMonitor.swift in Sources */,
 				679533CF53D6C33BD3210EF8 /* CameraSlots.swift in Sources */,
 				8D744454A266A3F27DBE30C3 /* CameraStatusView.swift in Sources */,
@@ -585,6 +606,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		9AA576FB7A65CFDB0447B8C6 /* XCLocalSwiftPackageReference "FujiKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = FujiKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		B48A0E940C65383265145B09 /* XCRemoteSwiftPackageReference "Yams" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -597,6 +625,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3A182C66D1D3741925323A3E /* FujiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FujiKit;
+		};
+		6AC8AA9437C79823E5B0FFB5 /* FujiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FujiKit;
+		};
 		A14CEA4687C44382A5B7AD45 /* Yams */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B48A0E940C65383265145B09 /* XCRemoteSwiftPackageReference "Yams" */;

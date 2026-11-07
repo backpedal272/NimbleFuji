@@ -1,6 +1,16 @@
 import Foundation
+import FujiKit
 import Testing
 @testable import Nimble_Fuji
+
+/// The engine camera tests use: NIMBLE_FUJI_TEST_ENGINE=fujicli selects fujicli, anything
+/// else the native FujiKit engine (without fallback, so native failures aren't hidden).
+nonisolated func testEngine() throws -> any CameraEngine {
+    if ProcessInfo.processInfo.environment["NIMBLE_FUJI_TEST_ENGINE"] == "fujicli" {
+        return try #require(FujiCLI.locate(preferredPath: nil))
+    }
+    return NativeEngine.shared
+}
 
 /// Renders on a real camera. Runs only when NIMBLE_FUJI_TEST_RAF points at a RAF file:
 ///   TEST_RUNNER_NIMBLE_FUJI_TEST_RAF=/path/to/DSCF0001.RAF xcodebuild test …
@@ -10,7 +20,7 @@ struct CameraRenderTests {
 
     @Test(.enabled(if: rafPath != nil), .timeLimit(.minutes(2)))
     func rendersBatchOnCamera() async throws {
-        let cli = try #require(FujiCLI.locate(preferredPath: nil))
+        let cli = try testEngine()
         let path = try #require(Self.rafPath)
         let raw = try #require(RawFile(url: URL(filePath: path)))
         let output = FileManager.default.temporaryDirectory.appending(path: "NimbleFujiCamera-\(UUID().uuidString)")
@@ -40,7 +50,7 @@ struct CameraSlotReadTests {
 
     @Test(.enabled(if: enabled), .timeLimit(.minutes(2)))
     func readsAllSlots() async throws {
-        let cli = try #require(FujiCLI.locate(preferredPath: nil))
+        let cli = try testEngine()
         let slots = CameraSlots()
         await slots.load(using: cli)
         #expect(slots.lastError == nil, "\(slots.lastError ?? "")")
@@ -60,7 +70,7 @@ struct CameraSlotWriteTests {
 
     @Test(.enabled(if: slot != nil && recipePath != nil), .timeLimit(.minutes(3)))
     func writesRecipeToSlot() async throws {
-        let cli = try #require(FujiCLI.locate(preferredPath: nil))
+        let cli = try testEngine()
         let number = try #require(Self.slot)
         let path = try #require(Self.recipePath)
         let recipe = try Recipe.fromYAML(String(contentsOfFile: path, encoding: .utf8))

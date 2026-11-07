@@ -43,12 +43,6 @@ nonisolated enum FujiCLIError: LocalizedError {
     case cancelled
     case failed(command: String, message: String)
 
-    /// fujicli refuses a Dynamic Range above the one the RAW was shot with.
-    var isDynamicRangeTooHigh: Bool {
-        guard case let .failed(_, message) = self else { return false }
-        return message.localizedCaseInsensitiveContains("Dynamic Range cannot exceed")
-    }
-
     var errorDescription: String? {
         switch self {
         case .notInstalled:

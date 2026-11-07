@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-/// Tracks whether fujicli can see a camera.
+/// Tracks whether the camera engine can see a camera.
 @Observable
 final class CameraMonitor {
     enum Status: Equatable {
@@ -21,7 +21,7 @@ final class CameraMonitor {
     private(set) var toolVersion: String?
     private var checkTask: Task<Void, Never>?
 
-    func refresh(using cli: FujiCLI?) {
+    func refresh(using cli: (any CameraEngine)?) {
         guard let cli else {
             status = .toolMissing
             toolVersion = nil

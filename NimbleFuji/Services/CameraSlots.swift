@@ -35,7 +35,7 @@ final class CameraSlots {
 
     // MARK: Reading
 
-    func load(using cli: FujiCLI) async {
+    func load(using cli: any CameraEngine) async {
         guard !isBusy else { return }
         isLoading = true
         lastError = nil
@@ -47,7 +47,7 @@ final class CameraSlots {
         hasLoaded = true
     }
 
-    private func reload(_ number: Int, using cli: FujiCLI) async {
+    private func reload(_ number: Int, using cli: any CameraEngine) async {
         let index = number - 1
         do {
             let data = try await cli.readSlot(number)
@@ -65,7 +65,7 @@ final class CameraSlots {
     /// Writes `recipe` into slot `number`, backing up the camera first if this
     /// session hasn't made a backup yet. Returns the backup made, if any.
     @discardableResult
-    func write(_ recipe: Recipe, to number: Int, using cli: FujiCLI) async throws -> URL? {
+    func write(_ recipe: Recipe, to number: Int, using cli: any CameraEngine) async throws -> URL? {
         guard !isBusy else { return nil }
         let index = number - 1
         lastError = nil
@@ -94,7 +94,7 @@ final class CameraSlots {
     }
 
     /// Exports a full camera backup into the Backups folder.
-    func backup(using cli: FujiCLI) async throws -> URL {
+    func backup(using cli: any CameraEngine) async throws -> URL {
         let folder = Self.backupFolder
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         let formatter = DateFormatter()
@@ -106,7 +106,7 @@ final class CameraSlots {
         return url
     }
 
-    func backUpNow(using cli: FujiCLI) async throws -> URL {
+    func backUpNow(using cli: any CameraEngine) async throws -> URL {
         busyMessage = "Backing up camera settings…"
         defer { busyMessage = nil }
         let url = try await backup(using: cli)
@@ -114,7 +114,7 @@ final class CameraSlots {
         return url
     }
 
-    func restore(from url: URL, using cli: FujiCLI) async throws {
+    func restore(from url: URL, using cli: any CameraEngine) async throws {
         busyMessage = "Restoring \(url.lastPathComponent)…"
         do {
             try await cli.importBackup(from: url)

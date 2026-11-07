@@ -43,7 +43,7 @@ final class BatchRenderer {
     var currentJob: Job? { jobs.first { $0.status == .running } }
     var outputFolder: URL?
 
-    func start(raws: [RawFile], recipes: [Recipe], outputFolder: URL, cli: FujiCLI, draft: Bool, overwrite: Bool) {
+    func start(raws: [RawFile], recipes: [Recipe], outputFolder: URL, cli: any CameraEngine, draft: Bool, overwrite: Bool) {
         guard !isRunning else { return }
         jobs = raws.flatMap { raw in recipes.map { Job(raw: raw, recipe: $0) } }
         self.outputFolder = outputFolder
@@ -79,14 +79,14 @@ final class BatchRenderer {
                 let began = Date.now
                 do {
                     do {
-                        try await Self.render(raw: job.raw, recipe: job.recipe, to: destination, cli: cli, draft: draft, handle: handle)
-                    } catch let error as FujiCLIError where error.isDynamicRangeTooHigh && job.recipe.dynamicRange != nil {
+                        jobs[index].note = try await Self.render(raw: job.raw, recipe: job.recipe, to: destination, cli: cli, draft: draft, handle: handle)
+                    } catch let error where error.isDynamicRangeTooHigh && job.recipe.dynamicRange != nil {
                         // The camera can't raise DR above what the RAW was shot with
                         // (e.g. DR400 on a DR200 shot). Fall back to the as-shot DR,
                         // which is the highest it allows.
                         var capped = job.recipe
                         capped.dynamicRange = nil
-                        try await Self.render(raw: job.raw, recipe: capped, to: destination, cli: cli, draft: draft, handle: handle)
+                        _ = try await Self.render(raw: job.raw, recipe: capped, to: destination, cli: cli, draft: draft, handle: handle)
                         jobs[index].note = "\(job.recipe.dynamicRange?.label ?? "DR") is higher than the photo was shot with; used the as-shot dynamic range."
                     }
                     jobs[index].status = .done(destination, Date.now.timeIntervalSince(began))
@@ -112,19 +112,20 @@ final class BatchRenderer {
 
     /// Renders into a temporary file first so a failed render never leaves a
     /// half-written JPG in the output folder.
-    private static func render(raw: RawFile, recipe: Recipe, to destination: URL, cli: FujiCLI, draft: Bool, handle: ProcessHandle) async throws {
+    private static func render(raw: RawFile, recipe: Recipe, to destination: URL, cli: any CameraEngine, draft: Bool, handle: ProcessHandle) async throws -> String? {
         let fm = FileManager.default
         let temp = fm.temporaryDirectory.appending(path: "NimbleFuji-\(UUID().uuidString).jpg")
         defer { try? fm.removeItem(at: temp) }
-        try await cli.render(input: raw.url, output: temp, recipe: recipe, draft: draft, handle: handle)
+        let note = try await cli.renderImage(input: raw.url, output: temp, recipe: recipe, draft: draft, handle: handle)
         guard fm.fileExists(atPath: temp.path(percentEncoded: false)) else {
-            throw FujiCLIError.failed(command: "image render", message: "fujicli finished but wrote no image.")
+            throw FujiCLIError.failed(command: "image render", message: "The camera finished but no image was written.")
         }
         if fm.fileExists(atPath: destination.path(percentEncoded: false)) {
             _ = try fm.replaceItemAt(destination, withItemAt: temp)
         } else {
             try fm.moveItem(at: temp, to: destination)
         }
+        return note
     }
 
     /// `<output>/<RAW name>_<Recipe>.jpg`, adding `-2`, `-3`… unless overwriting.

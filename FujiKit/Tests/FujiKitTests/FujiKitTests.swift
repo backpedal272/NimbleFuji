@@ -189,3 +189,18 @@ struct SettingsTests {
         #expect(s.customSettingName == "Leica Real" && s.highlightTone == -1 && s.noiseReduction == 0)
     }
 }
+
+struct StaleSessionTests {
+    @Test func recoversFromSessionLeftOpen() throws {
+        let t = FakeTransport()
+        t.reads = [
+            FakeTransport.container(.response, code: PTPSession.sessionAlreadyOpen, tid: 0), // OpenSession
+            FakeTransport.container(.response, code: PTPResponse.ok, tid: 1),                 // CloseSession
+            FakeTransport.container(.response, code: PTPResponse.ok, tid: 0),                 // OpenSession again
+        ]
+        let session = PTPSession(transport: t, chunkSize: 1024)
+        try session.open()
+        let codes = try t.written.map { var r = PTPReader($0); try r.skip(6); return try r.u16() }
+        #expect(codes == [0x1002, 0x1003, 0x1002])
+    }
+}

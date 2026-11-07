@@ -61,4 +61,19 @@ struct SlotTests {
         // Writing back what was read must not change any setting.
         #expect(slot.forSlot().hasSameContent(as: slot))
     }
+
+    @Test func recipeMapsToFujiKitSettings() throws {
+        var recipe = try Recipe(fujicliJSON: Data(Self.leicaRealJSON.utf8))
+        recipe.exposureOffset = 1.0 / 3.0
+        let s = recipe.cameraSettings()
+        #expect(s.filmSimulation == "reala-ace")
+        #expect(s.grainEffect == "off")
+        #expect(s.dynamicRange == "hdr200")
+        #expect(s.whiteBalance == "auto" && s.whiteBalanceTemperature == nil)
+        #expect(s.color == 3 && s.highlightTone == -1)
+        #expect(s.fileType == "jpeg")
+        // FujiKit's JSON is what the app's slot parser reads back.
+        let roundTrip = try Recipe(fujicliJSON: JSONEncoder().encode(s))
+        #expect(roundTrip.filmSimulation == .realaAce && roundTrip.dynamicRange == .dr200)
+    }
 }

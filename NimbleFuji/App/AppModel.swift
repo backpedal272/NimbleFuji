@@ -8,6 +8,7 @@ enum SettingsKey {
     static let overwriteExisting = "overwriteExisting"
     static let draftRenders = "draftRenders"
     static let batchRecipeFiles = "batchRecipeFiles"
+    static let cameraEngine = "cameraEngine"
 }
 
 @Observable
@@ -53,8 +54,22 @@ final class AppModel {
 
     // MARK: Settings
 
-    var cli: FujiCLI? {
+    /// The installed fujicli, if any.
+    var fujicli: FujiCLI? {
         FujiCLI.locate(preferredPath: UserDefaults.standard.string(forKey: SettingsKey.fujicliPath))
+    }
+
+    var engineChoice: EngineChoice {
+        EngineChoice(rawValue: UserDefaults.standard.string(forKey: SettingsKey.cameraEngine) ?? "") ?? .automatic
+    }
+
+    /// The engine every camera operation goes through (Settings › Camera engine).
+    var cli: (any CameraEngine)? {
+        switch engineChoice {
+        case .automatic: FallbackEngine(primary: .shared, fallback: fujicli)
+        case .native: NativeEngine.shared
+        case .fujicli: fujicli
+        }
     }
 
     var outputFolder: URL {
@@ -102,7 +117,7 @@ final class AppModel {
     func startRender() {
         guard let cli else {
             alert = AlertInfo(title: "fujicli not found",
-                              message: "Install fujicli or set its location in Settings (⌘,).")
+                              message: "Install fujicli, set its location, or switch to the native engine in Settings (⌘,).")
             return
         }
         let invalid = batchRecipes.filter { !$0.isValid }

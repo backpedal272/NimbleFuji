@@ -57,7 +57,7 @@ private struct CameraHelp: View {
                 Label("\(name) is ready.", systemImage: "checkmark.circle.fill")
                     .foregroundStyle(.green)
             case let .error(message):
-                Label("fujicli reported an error", systemImage: "exclamationmark.triangle.fill")
+                Label("The camera engine reported an error", systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
                 Text(message).font(.caption).textSelection(.enabled)
             case .toolMissing:

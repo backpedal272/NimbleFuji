@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @AppStorage(SettingsKey.fujicliPath) private var fujicliPath = ""
+    @AppStorage(SettingsKey.cameraEngine) private var engine = EngineChoice.automatic.rawValue
     @AppStorage(SettingsKey.overwriteExisting) private var overwriteExisting = false
     @AppStorage(SettingsKey.draftRenders) private var draftRenders = false
     @State private var choosingTool = false
@@ -11,7 +12,18 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("fujicli") {
+            Section {
+                Picker("Camera engine", selection: $engine) {
+                    ForEach(EngineChoice.allCases) { Text($0.label).tag($0.rawValue) }
+                }
+            } header: {
+                Text("Camera")
+            } footer: {
+                Text("The native engine (FujiKit) talks to the camera directly over USB. fujicli is only needed as a fallback or if you choose it.")
+                    .foregroundStyle(.secondary)
+            }
+
+            Section(engine == EngineChoice.native.rawValue ? "fujicli (not used)" : "fujicli") {
                 LabeledContent("Location") {
                     HStack {
                         TextField("Location", text: $fujicliPath, prompt: Text(detectedPath ?? "Not found"))
@@ -21,7 +33,7 @@ struct SettingsView: View {
                 }
                 LabeledContent("Status") {
                     if let detectedPath {
-                        Text(model.camera.toolVersion.map { "\($0) at \(detectedPath)" } ?? detectedPath)
+                        Text(detectedPath)
                             .foregroundStyle(.secondary)
                             .textSelection(.enabled)
                     } else {
@@ -80,11 +92,12 @@ struct SettingsView: View {
             }
         }
         .onChange(of: fujicliPath) { model.refreshCamera() }
+        .onChange(of: engine) { model.refreshCamera() }
     }
 
     private var detectedPath: String? {
         _ = fujicliPath
-        return model.cli?.executable.path(percentEncoded: false)
+        return model.fujicli?.executable.path(percentEncoded: false)
     }
 
     private func releaseCamera() {

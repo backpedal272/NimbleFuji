@@ -10,6 +10,8 @@ packages:
   Yams:
     url: https://github.com/jpsim/Yams
     from: 5.1.0
+  FujiKit:
+    path: FujiKit
 
 settings:
   base:
@@ -29,6 +31,8 @@ targets:
       - path: NimbleFuji
     dependencies:
       - package: Yams
+      - package: FujiKit
+        product: FujiKit
     settings:
       base:
         PRODUCT_NAME: Nimble Fuji
@@ -40,9 +44,8 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ENABLE_HARDENED_RUNTIME: YES
-        # v1 drives the external fujicli binary, which the App Sandbox forbids.
-        # Re-enable (and add com.apple.security.device.usb) once the native
-        # PTP engine replaces fujicli for App Store submission.
+        # Distributed as a notarized app outside the App Store: no sandbox, so the
+        # optional fujicli fallback can run. FujiKit's IOUSBHost access needs no entitlement.
         ENABLE_APP_SANDBOX: NO
         CODE_SIGN_STYLE: Automatic
         COMBINE_HIDPI_IMAGES: YES
@@ -55,6 +58,8 @@ targets:
     dependencies:
       - target: NimbleFuji
       - package: Yams
+      - package: FujiKit
+        product: FujiKit
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

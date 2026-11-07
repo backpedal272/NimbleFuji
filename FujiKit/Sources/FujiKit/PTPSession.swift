@@ -111,8 +111,18 @@ public final class PTPSession {
 
     // MARK: Session
 
+    public static let sessionAlreadyOpen: UInt16 = 0x201E
+
     public func open(sessionID: UInt32 = 1) throws {
-        try send(.openSession, [sessionID])
+        do {
+            try send(.openSession, [sessionID])
+        } catch PTPError.response(_, Self.sessionAlreadyOpen) {
+            // A previous client exited without closing its session; the camera keeps it
+            // across USB connections. We hold the interface now, so close it and start over.
+            _ = try? send(.closeSession)
+            transactionID = 0
+            try send(.openSession, [sessionID])
+        }
         isOpen = true
     }
 
