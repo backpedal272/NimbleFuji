@@ -8,3 +8,5 @@ xcuserdata/
 # Personal test photos (large RAFs)
 pics/
 *.RAF
+FujiKit/.build/
+FujiKit/.swiftpm/

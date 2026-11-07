@@ -1,0 +1,13 @@
+diff --git a/fml/option.cue b/fml/option.cue
+index d8da283..d230a64 100644
+--- a/fml/option.cue
++++ b/fml/option.cue
+@@ -514,7 +514,7 @@ options: {
+ 					weak_large:   0x04
+ 					strong_small: 0x03
+ 					weak_small:   0x02
+-					off:          0x01
++					off:          [0x01, 0x06] // cameras read back 6 for Off on default slots; write 1
+ 				}
+ 			}
+ 		}

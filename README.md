@@ -53,7 +53,15 @@ open NimbleFuji.xcodeproj
 
 fujicli must be installed (built here into `~/.local/bin/fujicli` from https://github.com/karaolidis/fujicli). You can change its location in Settings.
 
-## App Store status
+## Native engine (FujiKit)
+
+`FujiKit/` holds a native Swift port of fujicli (library plus a `fujikit` command-line tool). It talks to the camera through IOUSBHost and needs no external tools. The app still uses fujicli for now; see [FujiKit/README.md](FujiKit/README.md).
+
+## License
+
+GPL-3.0. See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md) for attribution to fujicli and the other projects this builds on. Distribution is planned as a free, notarized app outside the App Store.
+
+## App Store status (superseded)
 
 v1 calls the external, GPL-3.0 `fujicli` binary, so the App Sandbox is **off** and this build can't go to the App Store. Before submitting:
 
