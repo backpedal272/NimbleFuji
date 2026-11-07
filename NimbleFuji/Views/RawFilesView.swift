@@ -1,3 +1,4 @@
+import QuickLook
 import QuickLookThumbnailing
 import SwiftUI
 import UniformTypeIdentifiers
@@ -7,6 +8,8 @@ struct RawFilesView: View {
     @State private var importing = false
     @State private var isDropTargeted = false
     @State private var sortOrder = [KeyPathComparator(\RawFile.name)]
+    /// File shown in the Quick Look panel (Space bar).
+    @State private var previewURL: URL?
 
     private static let rafType = UTType(filenameExtension: "raf") ?? .rawImage
 
@@ -40,6 +43,7 @@ struct RawFilesView: View {
         }
         .contextMenu(forSelectionType: RawFile.ID.self) { ids in
             if !ids.isEmpty {
+                Button("Quick Look") { preview(ids) }
                 Button("Show in Finder") { model.reveal(Array(ids)) }
                 Button("Remove from List") {
                     model.library.remove(ids)
@@ -49,6 +53,13 @@ struct RawFilesView: View {
         } primaryAction: { ids in
             for url in ids { NSWorkspace.shared.open(url) }
         }
+        .onKeyPress(.space) {
+            guard previewURL == nil, !model.selectedRawIDs.isEmpty else { return .ignored }
+            preview(model.selectedRawIDs)
+            return .handled
+        }
+        // Arrow keys in the panel step through the selected files, or all files if one is selected.
+        .quickLookPreview($previewURL, in: previewItems)
         .onDeleteCommand {
             model.library.remove(model.selectedRawIDs)
             model.selectedRawIDs = []
@@ -99,6 +110,16 @@ struct RawFilesView: View {
                 .disabled(model.selectedRawIDs.isEmpty)
             }
         }
+    }
+
+    /// The selected files in list order, or every file when only one is selected.
+    private var previewItems: [URL] {
+        let selected = sortedFiles.filter { model.selectedRawIDs.contains($0.id) }
+        return (selected.count > 1 ? selected : sortedFiles).map(\.url)
+    }
+
+    private func preview(_ ids: Set<RawFile.ID>) {
+        previewURL = sortedFiles.first { ids.contains($0.id) }?.url
     }
 
     private var sortedFiles: [RawFile] {
