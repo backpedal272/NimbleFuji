@@ -97,8 +97,10 @@ final class CameraSlots {
     func backup(using cli: FujiCLI) async throws -> URL {
         let folder = Self.backupFolder
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        let stamp = Date.now.formatted(.iso8601.year().month().day().dateSeparator(.dash).time(includingFractionalSeconds: false).timeSeparator(.omitted))
-            .replacingOccurrences(of: "T", with: " ")
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HHmmss"
+        let stamp = formatter.string(from: .now)
         let url = folder.appending(path: "X-T5 \(stamp).bak")
         try await cli.exportBackup(to: url)
         return url

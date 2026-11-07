@@ -50,3 +50,31 @@ struct CameraSlotReadTests {
         }
     }
 }
+
+/// WRITES a recipe to a real camera slot. Runs only when NIMBLE_FUJI_TEST_WRITE_SLOT
+/// names the slot number and NIMBLE_FUJI_TEST_WRITE_RECIPE points at a YAML recipe.
+@MainActor
+struct CameraSlotWriteTests {
+    nonisolated static let slot = ProcessInfo.processInfo.environment["NIMBLE_FUJI_TEST_WRITE_SLOT"].flatMap(Int.init)
+    nonisolated static let recipePath = ProcessInfo.processInfo.environment["NIMBLE_FUJI_TEST_WRITE_RECIPE"]
+
+    @Test(.enabled(if: slot != nil && recipePath != nil), .timeLimit(.minutes(3)))
+    func writesRecipeToSlot() async throws {
+        let cli = try #require(FujiCLI.locate(preferredPath: nil))
+        let number = try #require(Self.slot)
+        let path = try #require(Self.recipePath)
+        let recipe = try Recipe.fromYAML(String(contentsOfFile: path, encoding: .utf8))
+
+        let slots = CameraSlots()
+        await slots.load(using: cli)
+        let backup = try await slots.write(recipe, to: number, using: cli)
+        let backupURL = try #require(backup)
+        let size = try FileManager.default.attributesOfItem(atPath: backupURL.path(percentEncoded: false))[.size] as? Int ?? 0
+        print("✓ backup \(backupURL.path(percentEncoded: false)) (\(size) bytes)")
+
+        let written = try #require(slots.slots[number - 1].recipe)
+        print("✓ C\(number) now: \(written.name) — \(written.settingRows.map { "\($0.label)=\($0.value)" }.joined(separator: ", "))")
+        #expect(written.name == Recipe.slotName(for: recipe.name))
+        #expect(written.hasSameContent(as: { var r = recipe.forSlot(); r.name = written.name; r.notes = nil; r.source = nil; return r }()))
+    }
+}
