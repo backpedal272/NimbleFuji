@@ -1,0 +1,73 @@
+name: NimbleFuji
+options:
+  bundleIdPrefix: com.alain
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+
+packages:
+  Yams:
+    url: https://github.com/jpsim/Yams
+    from: 5.1.0
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    SWIFT_UPCOMING_FEATURE_NONISOLATED_NONSENDING_BY_DEFAULT: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+
+targets:
+  NimbleFuji:
+    type: application
+    platform: macOS
+    sources:
+      - path: NimbleFuji
+    dependencies:
+      - package: Yams
+    settings:
+      base:
+        PRODUCT_NAME: Nimble Fuji
+        PRODUCT_BUNDLE_IDENTIFIER: com.alain.NimbleFuji
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Nimble Fuji
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.photography
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_HARDENED_RUNTIME: YES
+        # v1 drives the external fujicli binary, which the App Sandbox forbids.
+        # Re-enable (and add com.apple.security.device.usb) once the native
+        # PTP engine replaces fujicli for App Store submission.
+        ENABLE_APP_SANDBOX: NO
+        CODE_SIGN_STYLE: Automatic
+        COMBINE_HIDPI_IMAGES: YES
+
+  NimbleFujiTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: NimbleFujiTests
+    dependencies:
+      - target: NimbleFuji
+      - package: Yams
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.alain.NimbleFujiTests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Nimble Fuji.app/Contents/MacOS/Nimble Fuji"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+
+schemes:
+  NimbleFuji:
+    build:
+      targets:
+        NimbleFuji: all
+        NimbleFujiTests: [test]
+    test:
+      targets:
+        - NimbleFujiTests
