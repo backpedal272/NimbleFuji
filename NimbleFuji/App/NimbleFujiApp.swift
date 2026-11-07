@@ -2,7 +2,13 @@ import SwiftUI
 
 @main
 struct NimbleFujiApp: App {
-    @State private var model = AppModel()
+    @State private var model: AppModel
+
+    init() {
+        // Must run before AppModel reads any setting.
+        LegacyDefaults.migrate()
+        _model = State(initialValue: AppModel())
+    }
 
     var body: some Scene {
         Window("Nimble Fuji", id: "main") {

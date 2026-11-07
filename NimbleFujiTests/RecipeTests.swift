@@ -149,4 +149,22 @@ struct RecipeTests {
             #expect(recipe.isValid, "\(recipe.name): \(recipe.validationIssues())")
         }
     }
+
+    @Test func migratesSettingsFromOldBundleID() throws {
+        // Throwaway domains only: the real com.alain.NimbleFuji domain is never touched.
+        let target = "NimbleFujiTests.target.\(UUID().uuidString)"
+        let source = "NimbleFujiTests.source.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: target))
+        defer {
+            defaults.removePersistentDomain(forName: target)
+            defaults.removePersistentDomain(forName: source)
+        }
+        defaults.setPersistentDomain(["fujicliPath": "/old", "outputFolderPath": "/tmp/out", "draftRenders": true], forName: source)
+        defaults.set("/kept", forKey: "fujicliPath")
+        #expect(LegacyDefaults.migrate(into: defaults, from: source) == 2)
+        #expect(defaults.string(forKey: "outputFolderPath") == "/tmp/out")
+        #expect(defaults.bool(forKey: "draftRenders"))
+        #expect(defaults.string(forKey: "fujicliPath") == "/kept") // never overwritten
+        #expect(LegacyDefaults.migrate(into: defaults, from: source) == 0) // runs once
+    }
 }
