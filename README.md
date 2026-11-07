@@ -53,6 +53,15 @@ open NimbleFuji.xcodeproj
 
 fujicli must be installed (built here into `~/.local/bin/fujicli` from https://github.com/karaolidis/fujicli). You can change its location in Settings.
 
+## App icon
+
+`scripts/generate_icon.swift` draws the icon in the Nimble Icons style (cream camera on the `#009AD6` → `#006CA5` gradient). To regenerate it:
+
+```sh
+swift scripts/generate_icon.swift scripts/AppIcon.png
+for n in 16 32 64 128 256 512 1024; do sips -z $n $n scripts/AppIcon.png --out NimbleFuji/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-mac-$n.png; done
+```
+
 ## Native engine (FujiKit)
 
 `FujiKit/` holds a native Swift port of fujicli (library plus a `fujikit` command-line tool). It talks to the camera through IOUSBHost and needs no external tools. The app still uses fujicli for now; see [FujiKit/README.md](FujiKit/README.md).
@@ -69,4 +78,3 @@ v1 calls the external, GPL-3.0 `fujicli` binary, so the App Sandbox is **off** a
 - Turn on `ENABLE_APP_SANDBOX` and add `com.apple.security.device.usb` plus user-selected read/write file access.
 - Save the output and recipe folders as security-scoped bookmarks instead of plain paths.
 - Remove the “Release Camera from macOS” button (it runs `killall`).
-- Add an app icon.
