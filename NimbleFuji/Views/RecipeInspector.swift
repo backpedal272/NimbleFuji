@@ -32,9 +32,11 @@ struct RecipeEditor: View {
         Form {
             Section {
                 TextField("Name", text: $draft.name)
-                TextField("Source", text: optionalText($draft.source), prompt: Text("URL or credit"))
-                TextField("Notes", text: optionalText($draft.notes), axis: .vertical)
-                    .lineLimit(2...5)
+            }
+
+            Section("Comment") {
+                PlaceholderEditor(text: optionalText($draft.comment),
+                                  placeholder: "When you use this recipe, what you changed from the original…")
             }
 
             Section("Film Simulation") {
@@ -91,6 +93,12 @@ struct RecipeEditor: View {
                 }
             }
 
+            Section("Origin") {
+                TextField("Source", text: optionalText($draft.source), prompt: Text("URL or credit"))
+                PlaceholderEditor(text: optionalText($draft.notes),
+                                  placeholder: "Where the recipe came from, its history, as imported…")
+            }
+
             Section {
                 DisclosureGroup("YAML", isExpanded: $showYAML) {
                     Text((try? draft.toYAML()) ?? "")
@@ -134,6 +142,28 @@ struct RecipeEditor: View {
 }
 
 // MARK: - Controls
+
+/// Multi-line text field with a placeholder.
+private struct PlaceholderEditor: View {
+    @Binding var text: String
+    let placeholder: String
+
+    var body: some View {
+        TextEditor(text: $text)
+            .font(.body)
+            .frame(minHeight: 60, maxHeight: 180)
+            .scrollContentBackground(.hidden)
+            .overlay(alignment: .topLeading) {
+                if text.isEmpty {
+                    Text(placeholder)
+                        .foregroundStyle(.tertiary)
+                        .padding(.top, 1)
+                        .padding(.leading, 5)
+                        .allowsHitTesting(false)
+                }
+            }
+    }
+}
 
 private struct ChoicePicker<T: RecipeChoice>: View {
     let title: String

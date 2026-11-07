@@ -5,6 +5,7 @@ import Yams
 ///
 /// ```yaml
 /// name: CLAUTRA 800
+/// comment: My go-to for warm evening light; I lowered the grain.
 /// film_simulation: Classic Chrome
 /// grain: Strong Large
 /// color_chrome_effect: Weak
@@ -19,10 +20,12 @@ import Yams
 /// sharpness: -2
 /// high_iso_nr: -4
 /// clarity: -2
+/// source: https://…
+/// notes: Built from the Portra 800 v3 recipe on Fuji X Weekly.
 /// ```
 nonisolated extension Recipe: Codable {
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case name, notes, source
+        case name, comment, notes, source
         case filmSimulation = "film_simulation"
         case monochromaticColorWarmCool = "monochromatic_color_wc"
         case monochromaticColorMagentaGreen = "monochromatic_color_mg"
@@ -47,6 +50,7 @@ nonisolated extension Recipe: Codable {
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         self.init(name: try c.decodeIfPresent(String.self, forKey: .name) ?? "Untitled")
+        comment = try c.decodeIfPresent(String.self, forKey: .comment)
         notes = try c.decodeIfPresent(String.self, forKey: .notes)
         source = try c.decodeIfPresent(String.self, forKey: .source)
 
@@ -89,6 +93,7 @@ nonisolated extension Recipe: Codable {
     func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
         try c.encode(name, forKey: .name)
+        try c.encodeIfPresent(comment, forKey: .comment)
         try c.encodeIfPresent(filmSimulation?.label, forKey: .filmSimulation)
         try c.encodeIfPresent(monochromaticColorWarmCool, forKey: .monochromaticColorWarmCool)
         try c.encodeIfPresent(monochromaticColorMagentaGreen, forKey: .monochromaticColorMagentaGreen)

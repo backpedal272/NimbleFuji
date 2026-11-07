@@ -53,6 +53,24 @@ struct RecipeTests {
         #expect(decoded.hasSameContent(as: recipe), "YAML was:\n\(yaml)")
     }
 
+    @Test func keepsCommentAndNotesSeparate() throws {
+        let recipe = try Recipe.fromYAML("name: Two\ncomment: Use for portraits\nnotes: From Fuji X Weekly")
+        #expect(recipe.comment == "Use for portraits")
+        #expect(recipe.notes == "From Fuji X Weekly")
+        let yaml = try recipe.toYAML()
+        let lines = yaml.split(separator: "\n").map(String.init)
+        #expect(lines.first == "name: Two")
+        #expect(lines.dropFirst().first == "comment: Use for portraits", "comment follows the name")
+        #expect(lines.last == "notes: From Fuji X Weekly")
+    }
+
+    @Test func multilineCommentRoundTrips() throws {
+        var recipe = Recipe(name: "Story")
+        recipe.comment = "Started from Portra 800 v3.\nWarmed it up for indoor light."
+        let decoded = try Recipe.fromYAML(try recipe.toYAML())
+        #expect(decoded.comment == recipe.comment)
+    }
+
     @Test func acceptsAliasesAndTokens() {
         #expect(FilmSimulation.parse("classic-chrome") == .classicChrome)
         #expect(FilmSimulation.parse("Classic Neg.") == .classicNegative)

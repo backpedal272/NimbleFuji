@@ -6,6 +6,9 @@ nonisolated struct Recipe: Identifiable, Hashable, Sendable {
     var id = UUID()
 
     var name: String
+    /// The user's own comment: when to use it, what they changed from the original.
+    var comment: String?
+    /// Where the recipe came from and its history, as imported.
     var notes: String?
     var source: String?
 

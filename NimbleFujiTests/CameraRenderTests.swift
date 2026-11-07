@@ -75,6 +75,6 @@ struct CameraSlotWriteTests {
         let written = try #require(slots.slots[number - 1].recipe)
         print("✓ C\(number) now: \(written.name) — \(written.settingRows.map { "\($0.label)=\($0.value)" }.joined(separator: ", "))")
         #expect(written.name == Recipe.slotName(for: recipe.name))
-        #expect(written.hasSameContent(as: { var r = recipe.forSlot(); r.name = written.name; r.notes = nil; r.source = nil; return r }()))
+        #expect(written.hasSameContent(as: { var r = recipe.forSlot(); r.name = written.name; r.comment = nil; r.notes = nil; r.source = nil; return r }()))
     }
 }

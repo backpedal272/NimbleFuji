@@ -18,14 +18,6 @@ final class AppModel {
     let camera = CameraMonitor()
     let slots = CameraSlots()
 
-    enum Workspace: String, CaseIterable, Identifiable {
-        case render = "Render"
-        case slots = "Camera Slots"
-        var id: String { rawValue }
-        var systemImage: String { self == .render ? "photo.stack" : "square.grid.3x3" }
-    }
-
-    var workspace: Workspace = .render
     /// A pending slot write waiting for the user's confirmation.
     var pendingSlotWrite: SlotWrite?
 
@@ -97,7 +89,14 @@ final class AppModel {
     }
 
     func refreshCamera() {
+        // Avoid talking to the camera twice at once.
+        guard !slots.isBusy, !renderer.isRunning else { return }
         camera.refresh(using: cli)
+    }
+
+    /// Reads the slots the first time the camera shows up.
+    func cameraStatusChanged() {
+        if camera.status.isConnected, !slots.hasLoaded, canUseSlots { loadSlots() }
     }
 
     func startRender() {
@@ -126,6 +125,8 @@ final class AppModel {
     // MARK: Camera slots
 
     var canUseSlots: Bool { !renderer.isRunning && !slots.isBusy }
+    /// Slots have been read and can be written now.
+    var slotsAvailable: Bool { canUseSlots && camera.status.isConnected && slots.hasLoaded }
 
     func loadSlots() {
         guard let cli else {
@@ -182,12 +183,13 @@ final class AppModel {
     }
 
     /// Saves a slot's settings as a new YAML recipe.
-    func saveSlotAsRecipe(_ slot: CameraSlots.Slot) {
+    func saveSlotAsRecipe(_ slot: CameraSlots.Slot, name: String) {
         guard var recipe = slot.recipe else { return }
         recipe.id = UUID()
-        let base = recipe.name.trimmingCharacters(in: .whitespaces)
-        recipe.name = recipes.uniqueName(base.isEmpty ? "C\(slot.number) Recipe" : base)
-        recipe.source = "X-T5 custom slot C\(slot.number)"
+        let base = name.trimmingCharacters(in: .whitespaces)
+        recipe.name = recipes.uniqueName(base.isEmpty ? "\(slot.title) Recipe" : base)
+        recipe.source = "X-T5 custom slot \(slot.title)"
+        recipe.notes = "Saved from slot \(slot.title)\(slot.name.isEmpty ? "" : " (“\(slot.name)”)") on \(Date.now.formatted(date: .long, time: .omitted))."
         perform {
             let saved = try recipes.save(recipe)
             editingRecipeID = saved.id
