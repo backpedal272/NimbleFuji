@@ -168,3 +168,24 @@ struct RecipeTests {
         #expect(LegacyDefaults.migrate(into: defaults, from: source) == 0) // runs once
     }
 }
+
+/// Loads a real recipe folder with the app's own store. Runs only when
+/// NIMBLE_FUJI_TEST_RECIPES_DIR points at a folder.
+@MainActor
+struct RecipeFolderTests {
+    nonisolated static let folder = ProcessInfo.processInfo.environment["NIMBLE_FUJI_TEST_RECIPES_DIR"]
+
+    @Test(.enabled(if: folder != nil))
+    func everyRecipeLoadsAndIsValid() throws {
+        let store = RecipeStore(folder: URL(filePath: try #require(Self.folder), directoryHint: .isDirectory))
+        store.reload()
+        for problem in store.problems {
+            Issue.record("\(problem.file.lastPathComponent): \(problem.message)")
+        }
+        for recipe in store.recipes {
+            #expect(recipe.isValid, "\(recipe.name): \(recipe.validationIssues())")
+            print("✓ \(recipe.name) — \(recipe.summary)")
+        }
+        print("\(store.recipes.count) recipes, \(store.problems.count) problems")
+    }
+}
