@@ -27,6 +27,13 @@ public final class PTPSession {
     private let chunkSize: Int
     private(set) var transactionID: UInt32 = 0
     private var isOpen = false
+    /// Set FUJIKIT_TRACE=1 to log every operation and response to stderr.
+    private static let trace = ProcessInfo.processInfo.environment["FUJIKIT_TRACE"] != nil
+
+    private func log(_ message: @autoclosure () -> String) {
+        guard Self.trace else { return }
+        FileHandle.standardError.write(Data("[ptp] \(message())\n".utf8))
+    }
 
     public init(transport: PTPTransport, chunkSize: Int) {
         self.transport = transport
@@ -41,6 +48,8 @@ public final class PTPSession {
         let tid = transactionID
         defer { transactionID &+= 1 }
 
+        log(String(format: "→ 0x%04x tid=%u params=%@ data=%d", operation.rawValue, tid,
+                   params.map { String(format: "0x%x", $0) }.joined(separator: ","), data?.count ?? -1))
         var payload = PTPWriter()
         params.forEach { payload.u32($0) }
         try write(.command, code: operation.rawValue, payload: payload.data, transactionID: tid)
@@ -55,11 +64,13 @@ public final class PTPSession {
             case PTPContainerType.data.rawValue:
                 result = body
             case PTPContainerType.response.rawValue:
+                log(String(format: "← 0x%04x (%@) data=%d", code, PTPResponse.name(code), result.count))
                 guard code == PTPResponse.ok else {
                     throw PTPError.response(operation: operation.rawValue, code: code)
                 }
                 return result
             default:
+                log(String(format: "← container type %u code 0x%04x (ignored)", type, code))
                 continue // events and unknown containers are ignored, as in fujicli
             }
         }

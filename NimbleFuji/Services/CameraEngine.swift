@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+import AppKit
 import FujiKit
 import Foundation
 
@@ -107,17 +108,76 @@ nonisolated final class NativeEngine: CameraEngine, @unchecked Sendable {
         try await perform { try $0.importBackup(data) }
     }
 
+    // MARK: Session
+
+    /// The open session, reused by operations that follow each other closely (reading seven
+    /// slots, writing one and reading it back, a batch of renders). Opening a new session right
+    /// after closing one sometimes leaves the camera unresponsive. Only touched on `queue`.
+    private var camera: FujiCamera?
+    private var idleClose: DispatchWorkItem?
+    /// How long a session stays open after the last operation.
+    private static let idleTimeout: TimeInterval = 2
+
+    private init() {
+        // Close the session cleanly when the app quits, so the camera isn't left waiting.
+        NotificationCenter.default.addObserver(forName: NSApplication.willTerminateNotification, object: nil, queue: nil) { [weak self] _ in
+            self?.queue.sync { self?.closeSession() }
+        }
+    }
+
+    /// Closes the session now (on `queue`).
+    private func closeSession() {
+        idleClose?.cancel()
+        idleClose = nil
+        camera = nil // FujiCamera.deinit sends CloseSession and releases the USB interface
+    }
+
+    private func scheduleClose() {
+        idleClose?.cancel()
+        let work = DispatchWorkItem { [weak self] in self?.closeSession() }
+        idleClose = work
+        queue.asyncAfter(deadline: .now() + Self.idleTimeout, execute: work)
+    }
+
+    /// Opens a session, retrying once: the camera occasionally refuses the first try.
+    private func openCamera() throws -> FujiCamera {
+        do {
+            return try FujiCamera()
+        } catch let error as FujiUSBError where !error.isNoCamera {
+            Thread.sleep(forTimeInterval: 0.5)
+            return try FujiCamera()
+        }
+    }
+
     private func perform<T: Sendable>(_ body: @escaping @Sendable (FujiCamera) throws -> T) async throws -> T {
         try await withCheckedThrowingContinuation { continuation in
-            queue.async {
+            queue.async { [self] in
+                idleClose?.cancel()
+                defer { if camera != nil { scheduleClose() } }
                 do {
-                    let camera = try FujiCamera()
-                    continuation.resume(returning: try body(camera))
+                    let reused = camera != nil
+                    let current = try camera ?? openCamera()
+                    camera = current
+                    do {
+                        continuation.resume(returning: try body(current))
+                    } catch where Self.isConnectionError(error) && reused {
+                        // The kept session went stale (camera switched off, cable pulled): start over once.
+                        closeSession()
+                        let fresh = try openCamera()
+                        camera = fresh
+                        continuation.resume(returning: try body(fresh))
+                    }
                 } catch {
+                    // After a USB or protocol failure the session can't be trusted.
+                    if Self.isConnectionError(error) { closeSession() }
                     continuation.resume(throwing: Self.translate(error))
                 }
             }
         }
+    }
+
+    private static func isConnectionError(_ error: Error) -> Bool {
+        error is FujiUSBError || error is PTPError || error is PTPCodecError
     }
 
     private static func translate(_ error: Error) -> Error {

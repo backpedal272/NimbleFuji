@@ -35,6 +35,8 @@ public final class FujiCamera {
     }
 
     deinit {
+        // Don't let a camera that stopped answering hold up the close.
+        (transport as? IOUSBHostTransport)?.timeout = 3
         ptp.close()
     }
 

@@ -47,13 +47,14 @@ final class CameraSlots {
         hasLoaded = true
     }
 
-    private func reload(_ number: Int, using cli: any CameraEngine) async {
+    private func reload(_ number: Int, using cli: any CameraEngine, keepOnFailure: Bool = false) async {
         let index = number - 1
         do {
             let data = try await cli.readSlot(number)
             slots[index].recipe = try Recipe(fujicliJSON: data)
             slots[index].error = nil
         } catch {
+            if keepOnFailure, slots[index].recipe != nil { return }
             slots[index].recipe = nil
             slots[index].error = error.localizedDescription
             lastError = error.localizedDescription
@@ -89,7 +90,13 @@ final class CameraSlots {
             await reload(number, using: cli)
             throw error
         }
-        await reload(number, using: cli)
+        // Show what was written straight away, then read the slot back to confirm.
+        // If the read-back fails, the written recipe stays: the write itself succeeded.
+        var written = recipe.forSlot()
+        written.name = Recipe.slotName(for: recipe.name)
+        slots[index].recipe = written
+        slots[index].error = nil
+        await reload(number, using: cli, keepOnFailure: true)
         return newBackup
     }
 

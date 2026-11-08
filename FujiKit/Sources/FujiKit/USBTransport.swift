@@ -12,6 +12,11 @@ public enum FujiUSBError: Error, CustomStringConvertible {
     case missingEndpoints
     case transfer(String, underlying: Error)
 
+    /// No camera to talk to (as opposed to a camera that failed to answer).
+    public var isNoCamera: Bool {
+        if case .noCamera = self { true } else { false }
+    }
+
     public var description: String {
         switch self {
         case .noCamera: "no supported camera found"
@@ -49,8 +54,10 @@ public final class IOUSBHostTransport: PTPTransport {
     private let interface: IOUSBHostInterface
     private let bulkIn: IOUSBHostPipe
     private let bulkOut: IOUSBHostPipe
-    /// 0 waits forever, like fujicli. Renders can take a few seconds per image.
-    public var timeout: TimeInterval = 0
+    /// Seconds one bulk transfer may take before it fails. fujicli waits forever, but a camera
+    /// that stops answering then hangs the app and keeps the camera busy until its battery is pulled.
+    /// Renders poll for their result, so no single transfer waits for the image processor.
+    public var timeout: TimeInterval = 30
 
     /// Lists connected Fujifilm cameras.
     public static func cameras() -> [USBCameraDescriptor] {

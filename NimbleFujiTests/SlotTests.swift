@@ -77,3 +77,48 @@ struct SlotTests {
         #expect(roundTrip.filmSimulation == .realaAce && roundTrip.dynamicRange == .dr200)
     }
 }
+
+/// A camera in memory: slots hold fujicli-style JSON.
+private final class FakeEngine: CameraEngine, @unchecked Sendable {
+    var slots: [Int: Data] = [:]
+    /// Simulates the camera failing to answer the read-back after a write.
+    var failReads = false
+    func version() async -> String? { "fake" }
+    func connectedCameras() async throws -> [String] { ["X-T5"] }
+    func renderImage(input: URL, output: URL, recipe: Recipe, draft: Bool, handle: ProcessHandle?) async throws -> String? { nil }
+    func readSlot(_ slot: Int) async throws -> Data {
+        if failReads { throw EngineError(message: "camera did not answer", isRecipeRule: false) }
+        return slots[slot] ?? Data(#"{"customSettingName":"","filmSimulation":"provia"}"#.utf8)
+    }
+    func writeSlot(_ slot: Int, recipe: Recipe) async throws {
+        var s = recipe.forSlot().cameraSettings()
+        s.customSettingName = Recipe.slotName(for: recipe.name)
+        slots[slot] = try JSONEncoder().encode(s)
+    }
+    func exportBackup(to url: URL) async throws {} // never touch the real Backups folder
+    func importBackup(from url: URL) async throws {}
+}
+
+@MainActor
+struct SlotWriteTests {
+    @Test func writingASlotShowsTheNewName() async throws {
+        let engine = FakeEngine()
+        let slots = CameraSlots()
+        await slots.load(using: engine)
+        #expect(slots.slots[2].name == "")
+        var recipe = Recipe(name: "Kodak Gold")
+        recipe.filmSimulation = .classicChrome
+        try await slots.write(recipe, to: 3, using: engine)
+        #expect(slots.slots[2].name == "Kodak Gold")
+    }
+
+    @Test func nameShowsEvenWhenTheReadBackFails() async throws {
+        let engine = FakeEngine()
+        let slots = CameraSlots()
+        await slots.load(using: engine)
+        engine.failReads = true
+        try await slots.write(Recipe(name: "Café Crème"), to: 5, using: engine)
+        #expect(slots.slots[4].name == "Cafe Creme")
+        #expect(slots.slots[4].error == nil)
+    }
+}
