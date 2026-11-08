@@ -42,7 +42,12 @@ struct ContentView: View {
         .alert(item: $model.alert) { info in
             Alert(title: Text(info.title), message: Text(info.message))
         }
-        .onAppear { model.refreshCamera() }
+        .onAppear {
+            model.refreshCamera()
+            #if DEBUG
+            DebugSnapshot.scheduleIfRequested()
+            #endif
+        }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             if !model.renderer.isRunning { model.refreshCamera() }
         }

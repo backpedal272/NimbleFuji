@@ -15,6 +15,7 @@
 		268BB64DEFCAA4679669EE9F /* FujiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6AC8AA9437C79823E5B0FFB5 /* FujiKit */; };
 		2B788E09D2F02B8BE1CAB6CA /* RecipeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C64F67AFB2FAAEAAD456D9D /* RecipeStore.swift */; };
 		313B1212A4F831992E6C7276 /* RawLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74FFCBF2F3C564AE7D62423A /* RawLibrary.swift */; };
+		3948DD6D7D02932ADBCA1E50 /* DebugSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87209ED12EC0152BCEF5580 /* DebugSnapshot.swift */; };
 		39C040589EB6F386186C4598 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C7FC63E0DF75B120B14FCE67 /* Yams */; };
 		3C2DF8CA20E7EBED67DA11AD /* RecipeCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE79E26FE89121A23508976 /* RecipeCoding.swift */; };
 		446A731649E19D181D86CB8D /* RecipeInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9318A5C610E6C251CA20957 /* RecipeInspector.swift */; };
@@ -84,6 +85,7 @@
 		BB80FCD2DD787B2172C4F1E9 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		D35E0EE9FFF87B8A793E2944 /* RecipeSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeSidebar.swift; sourceTree = "<group>"; };
 		E610EE84573AAEB997490D76 /* RawFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawFilesView.swift; sourceTree = "<group>"; };
+		E87209ED12EC0152BCEF5580 /* DebugSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSnapshot.swift; sourceTree = "<group>"; };
 		F1B54852BDD55A50DE1B88DC /* CameraEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -197,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				BB80FCD2DD787B2172C4F1E9 /* AppModel.swift */,
+				E87209ED12EC0152BCEF5580 /* DebugSnapshot.swift */,
 				8DA642EDF794837D61051F16 /* LegacyDefaults.swift */,
 				92D4A0BF86F2C458FFDFC444 /* NimbleFujiApp.swift */,
 			);
@@ -325,6 +328,7 @@
 				679533CF53D6C33BD3210EF8 /* CameraSlots.swift in Sources */,
 				8D744454A266A3F27DBE30C3 /* CameraStatusView.swift in Sources */,
 				5EB08CAD519A0E524BA69255 /* ContentView.swift in Sources */,
+				3948DD6D7D02932ADBCA1E50 /* DebugSnapshot.swift in Sources */,
 				50FF1209E7DCDE5474B8982C /* FujiCLI.swift in Sources */,
 				8842C716DD78EABA5B9F1988 /* LegacyDefaults.swift in Sources */,
 				6208181974749EF8F33DCE86 /* NimbleFujiApp.swift in Sources */,
