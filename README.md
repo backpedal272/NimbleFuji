@@ -33,7 +33,9 @@ Nimble Fuji sends your RAF files to a connected Fujifilm X-T5 over USB and has t
 
 ## Install
 
-There's no pre-built download yet, so you build the app from source. It takes a couple of minutes with Xcode:
+Download the latest `NimbleFuji-<version>.dmg` from [Releases](https://github.com/backpedal272/NimbleFuji/releases/latest). It's free, signed and notarized by Apple. Open it, read **READ ME FIRST.txt**, then drag **Nimble Fuji** onto Applications. On first launch the app shows the same risk warning and won't talk to the camera until you accept it.
+
+To build from source instead, you need Xcode:
 
 ```sh
 git clone https://github.com/backpedal272/NimbleFuji.git
@@ -41,7 +43,7 @@ cd NimbleFuji
 open NimbleFuji.xcodeproj
 ```
 
-In Xcode, choose **Product › Run**, or **Product › Archive** to get an app you can copy to /Applications. A free, notarized download is planned.
+In Xcode, choose **Product › Run**, or see [Building a DMG](#building-a-dmg).
 
 ## Using it
 
