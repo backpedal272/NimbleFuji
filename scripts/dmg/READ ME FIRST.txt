@@ -1,0 +1,67 @@
+NIMBLE FUJI — READ ME FIRST
+===========================
+
+WARNING: USE AT YOUR OWN RISK
+-----------------------------
+
+Nimble Fuji talks to your camera over USB using a protocol that Fujifilm has
+never documented. Everything it knows about that protocol was worked out by
+reverse engineering, and some of it is guesswork.
+
+Sending the camera commands it doesn't expect can change settings you didn't
+mean to change, corrupt its custom settings or memory card, crash its
+firmware, or leave it permanently unusable ("bricked"). Such damage may not be
+covered by your warranty.
+
+This program is an unofficial hobby project, provided for illustration and
+educational purposes only. It is not affiliated with, endorsed by or supported
+by FUJIFILM Corporation. It comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by law (see the GNU General Public License v3 in LICENSE.txt). The
+authors accept no liability for any damage to your camera, your files or
+anything else.
+
+If you are not willing to accept these risks, do not install this app and do
+not connect your camera to it.
+
+
+INSTALL
+-------
+
+Drag "Nimble Fuji" onto the Applications folder in this window.
+
+If macOS says the app can't be opened because it's from an unidentified
+developer or can't be checked for malicious software:
+  1. Open System Settings › Privacy & Security.
+  2. Scroll down to the message about "Nimble Fuji" and click "Open Anyway".
+  3. Confirm with your password or Touch ID.
+You only need to do this once.
+
+
+REQUIREMENTS
+------------
+
+- macOS 26 or later.
+- A Fujifilm X-T5 (the only camera supported and tested, firmware 4.31).
+- A USB-C data cable, connected directly to the Mac (not through a hub).
+
+
+CAMERA SETUP
+------------
+
+1. On the camera: MENU › NETWORK/USB SETTING › CONNECTION MODE ›
+   USB RAW CONV./BACKUP RESTORE.
+2. Turn off AUTO POWER OFF while you work.
+3. Connect the cable and switch the camera on.
+
+Before its first slot write in a session, the app saves a full settings
+backup of the camera to ~/Library/Application Support/Nimble Fuji/Backups.
+Keep those backups.
+
+
+MORE INFORMATION
+----------------
+
+Source code, documentation and issues:
+https://github.com/backpedal272/NimbleFuji
+
+Fujifilm and X-T5 are trademarks of FUJIFILM Corporation.

@@ -101,6 +101,15 @@ brew install xcodegen
 xcodegen generate
 ```
 
+### Building a DMG
+
+`scripts/make-dmg.sh` builds a universal Release app and packages it in `build/dmg/NimbleFuji-<version>.dmg`, together with an Applications shortcut, `READ ME FIRST.txt` (the risk warning and install steps, from `scripts/dmg/`) and the license. Without arguments the app is ad-hoc signed, so users have to allow it under System Settings › Privacy & Security › Open Anyway. For distribution, pass your team ID and a notarytool profile. The app is then signed with Developer ID (Xcode must be signed in to the team; it uses Apple's cloud-managed certificate if your keychain has none), and both the app and the DMG are notarized and stapled:
+
+```sh
+xcrun notarytool store-credentials notary --team-id TEAMID   # once: Apple ID and an app-specific password
+TEAM_ID=TEAMID NOTARY_PROFILE=notary scripts/make-dmg.sh
+```
+
 ### Tests
 
 `xcodebuild test -scheme NimbleFuji` runs without a camera. The on-camera tests are opt-in:
