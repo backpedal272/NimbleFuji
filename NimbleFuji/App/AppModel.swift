@@ -104,6 +104,7 @@ final class AppModel {
     }
 
     func refreshCamera() {
+        guard Disclaimer.isAccepted else { return }
         // Avoid talking to the camera twice at once.
         guard !slots.isBusy, !renderer.isRunning else { return }
         camera.refresh(using: cli)
@@ -115,6 +116,7 @@ final class AppModel {
     }
 
     func startRender() {
+        guard Disclaimer.isAccepted else { return }
         guard let cli else {
             alert = AlertInfo(title: "fujicli not found",
                               message: "Install fujicli, set its location, or switch to the native engine in Settings (⌘,).")
@@ -144,6 +146,7 @@ final class AppModel {
     var slotsAvailable: Bool { canUseSlots && camera.status.isConnected && slots.hasLoaded }
 
     func loadSlots() {
+        guard Disclaimer.isAccepted else { return }
         guard let cli else {
             alert = AlertInfo(title: "fujicli not found", message: "Set its location in Settings (⌘,).")
             return
@@ -163,6 +166,7 @@ final class AppModel {
     }
 
     func performSlotWrite(_ write: SlotWrite) {
+        guard Disclaimer.isAccepted else { return }
         guard let cli else { return }
         pendingSlotWrite = nil
         Task {

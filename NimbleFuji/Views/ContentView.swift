@@ -43,13 +43,20 @@ struct ContentView: View {
             Alert(title: Text(info.title), message: Text(info.message))
         }
         .onAppear {
-            model.refreshCamera()
-            #if DEBUG
-            DebugSnapshot.scheduleIfRequested()
-            #endif
+            // Let the window finish appearing, then ask before touching the camera.
+            DispatchQueue.main.async {
+                let window = NSApp.windows.first { $0.identifier?.rawValue == "main" }
+                    ?? NSApp.windows.first { $0.isVisible && $0.canBecomeMain }
+                Disclaimer.confirmOrQuit(in: window) {
+                    model.refreshCamera()
+                    #if DEBUG
+                    DebugSnapshot.scheduleIfRequested()
+                    #endif
+                }
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
-            if !model.renderer.isRunning { model.refreshCamera() }
+            if Disclaimer.isAccepted && !model.renderer.isRunning { model.refreshCamera() }
         }
     }
 }
