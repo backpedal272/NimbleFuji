@@ -2,6 +2,12 @@
 
 Nimble Fuji is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License, version 3, as published by the Free Software Foundation. See [LICENSE](LICENSE).
 
+## Additional permission: Mac App Store
+
+The copyright holder of fujicli, Nikolaos Karaolidis, granted the following additional permission under section 7 of the GNU GPL v3 in November 2026:
+
+> As the copyright holder of fujicli, I grant you an additional permission under section 7 of the GNU GPL v3 (and AGPL v3): you may distribute NimbleFuji, including the code ported from fujicli, through the Mac App Store, notwithstanding any terms of Apple's App Store that conflict with the license, provided that the app is free of charge and its complete source remains publicly available under the same license.
+
 ## fujicli
 
 Nimble Fuji drives the camera through [fujicli](https://github.com/karaolidis/fujicli) (canonical repository: https://git.karaolidis.com/karaolidis/fujicli), and the native **FujiKit** engine in `FujiKit/` is a Swift port of fujicli's `fujicore` and `ptp-cursor` crates.

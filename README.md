@@ -129,6 +129,6 @@ Nimble Fuji stands on the reverse-engineering work of others. Above all, [fujicl
 
 ## License
 
-GPL-3.0. See [LICENSE](LICENSE).
+GPL-3.0. See [LICENSE](LICENSE). fujicli's author has granted an additional permission to distribute the app through the Mac App Store, provided that it is free of charge and its complete source stays public. See [NOTICE.md](NOTICE.md).
 
 Fujifilm and X-T5 are trademarks of FUJIFILM Corporation. This project is not affiliated with or endorsed by Fujifilm. It talks to your camera through an undocumented protocol, so use it at your own risk and keep backups.
